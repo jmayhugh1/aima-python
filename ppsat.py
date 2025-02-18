@@ -23,10 +23,14 @@ def ppsat_to_cnf(clause : str):
     
     pass
     
+def ppsat_wrappet(master, agent):
+    ## run the ./ppsat with args for 
+    pass
 class AgentKB(KB):
     def __init__(self, master: KB, sentence=None, mode=0):
         self.public = []
         self.private = []
+        self.master = master
         if sentence:
             self.tell_public(sentence) if mode == 0 else self.tell_private(sentence)
             
@@ -45,9 +49,30 @@ class AgentKB(KB):
     def tell_public(self, sentence):
         self.public.extend(conjuncts(to_cnf(sentence)))
     
-    def ask_master(self, query):
+    def ask_master(self):
         """Return True if the KB entails query, else return False."""
-        return self.ask_if_true(query)
+        return self.ask_master(self.master)
+    def _ask_master(self, master):
+        ## create a connection with
+        agent_clauses = ""
+        master_clauses = ""
+        for c in self.public:
+            agent_clauses += cnf_to_ppsat(c) + " "
+        for c in self.private:
+            agent_clauses += cnf_to_ppsat(c) + " "
+        for c in master.public:
+            master_clauses += cnf_to_ppsat(c) + " "
+        for c in master.private:
+            master_clauses += cnf_to_ppsat(c) + " "
+        print("self clauses:", agent_clauses)
+        print("master clauses:", master_clauses)
+        ## now go up a file and 
+            
+        
+        
+        
+        
+            
 
     def ask_generator(self, query):
         """Yield the empty substitution {} if KB entails query; else no results."""
